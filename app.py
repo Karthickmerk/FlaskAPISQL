@@ -15,7 +15,7 @@ class Candidate(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20))
     email = db.Column(db.String(30))
-    score = relationship("Test_score", uselist=False, back_populates="candidate")
+    test_score = relationship("Test_score", uselist=False, back_populates="candidate")
 
     def create(self):
         db.session.add(self)
@@ -30,11 +30,12 @@ class Candidate(db.Model):
         return f"{self.id}"
 class Test_score(db.Model):
     __tablename__ = "test_score"
+    id = db.Column(db.Integer, primary_key=True)
     first_round = db.Column(db.Integer)
     second_round = db.Column(db.Integer)
     third_round = db.Column(db.Integer)
-    candidate_id = db.Column(db.Integer, db.ForeignKey('candidate.id'),primary_key=True)
-    Candidate = relationship("Candidate", back_populates="test_score")
+    candidate_id = db.Column(db.Integer, db.ForeignKey('candidate.id'))
+    candidate = relationship("Candidate", back_populates="test_score")
 
     def create(self):
         db.session.add(self)
@@ -60,6 +61,10 @@ class AllCandiateMarks(ModelSchema):
     id = fields.Number(dump_only=True)
     name = fields.String(required=True)
     email = fields.String(required=True)
+    Test_score =  fields.List(fields.Number())
+    print('------------------------------------')
+    print(type(Test_score))
+    print(Test_score)
 
 
 # Get Candidates Score
